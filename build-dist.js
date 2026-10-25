@@ -53,9 +53,12 @@ PAGES.forEach(function (p) {
 
   fs.writeFileSync(path.join(OUT, DEST), html);
 
-  // Nothing may reach the network once deployed.
+  // Nothing may reach the network once deployed, except Google Analytics, which
+  // simply fails to load when offline.
   var remote = html.match(/https?:\/\/[^"')\s]+/g) || [];
-  var inPage = remote.filter(function (u) { return !/^https?:\/\/(www\.)?(go\.)?domaloans\.com/.test(u); });
+  var inPage = remote.filter(function (u) {
+    return !/^https?:\/\/((www\.)?(go\.)?domaloans\.com|www\.googletagmanager\.com\/gtag\/js)/.test(u);
+  });
 
   // Every local reference must already be sitting in dist/.
   var missing = (html.match(/(?:src|href)="([^"]+)"/g) || [])
