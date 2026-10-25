@@ -1,1 +1,14 @@
-dist/
+# macOS
+.DS_Store
+
+# Firebase deploy cache. Machine-local, rewritten on every deploy.
+.firebase/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# dist/ is deliberately tracked. It is not reproducible: build-dist.js reads the
+# fonts, QR codes and logos from the working directory, and those sources are
+# gone, so dist/ holds the only copy of them. It is also the offline fallback
+# for the event.
