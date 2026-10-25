@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "ws2026-001"
+  },
+  "targets": {
+    "ws2026-001": {
+      "hosting": {
+        "ws2026": [
+          "ws2026-dli"
+        ]
+      }
+    }
+  }
+}
