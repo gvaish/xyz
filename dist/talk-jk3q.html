@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Many Paths, One Front Door</title>
+<style>
+@font-face{font-family:'Archivo';font-style:normal;font-weight:100 900;font-display:swap;src:url(archivo.woff2) format('woff2')}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:200 900;font-display:swap;src:url(source-serif-4.woff2) format('woff2')}
+</style>
+<style>
+:root{
+  --ground:#FFFFFF;
+  --ink:#0B1F1A;
+  --ink-2:#4A5C54;
+  --ink-3:#7E8F88;
+  --green:#008D69;
+  --green-deep:#00644A;
+  --green-wash:#E8F5F0;
+  --flag:#C2340A;
+  --flag-wash:#FDEDE7;
+  --rule:#D3DCD8;
+  --sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
+
+#stage{position:fixed;inset:0;overflow:hidden;background:var(--ground);cursor:pointer}
+#world{position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+#links{position:absolute;overflow:visible;pointer-events:none}
+
+.card{
+  position:absolute;
+  background:var(--ground);
+  padding:60px 68px;
+  display:flex;
+  flex-direction:column;
+  transform-origin:center center;
+}
+.card.framed{border:10px solid var(--ink)}
+.card.soft{border:3px solid var(--rule)}
+
+.label{
+  position:absolute;
+  transform-origin:center center;
+  display:flex;align-items:baseline;gap:34px;
+  font-weight:900;font-size:168px;letter-spacing:-.025em;line-height:1;white-space:nowrap;
+}
+.label .n{color:var(--green);font-size:188px}
+
+/* ---------- type scale, world px ---------- */
+.eyebrow{
+  font-size:38px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--green-deep);margin:0 0 24px;
+}
+.eyebrow .sep{color:var(--ink-3);margin:0 .5em}
+h1{font-size:230px;font-weight:900;line-height:.9;letter-spacing:-.035em;margin:0 0 34px;text-wrap:balance}
+h2{font-size:104px;font-weight:800;line-height:1.04;letter-spacing:-.025em;margin:0 0 38px;text-wrap:balance}
+p{font-size:48px;line-height:1.36;margin:0 0 24px}
+.lede{font-size:56px;line-height:1.3;font-weight:500;margin:0 0 30px}
+.fine{font-size:28px;line-height:1.45;color:var(--ink-3);margin:22px 0 0;font-weight:500}
+.fine strong{color:var(--ink-2);font-weight:800}
+
+.vignette{
+  font-family:var(--serif);
+  font-size:46px;line-height:1.4;color:var(--ink);
+  margin:0;border-left:8px solid var(--green);padding-left:34px;
+}
+.kicker{
+  font-size:68px;font-weight:800;line-height:1.16;letter-spacing:-.02em;
+  color:var(--green-deep);margin:30px 0 0;text-wrap:balance;
+}
+
+/* ---------- scenario two-column body ---------- */
+.body2{display:grid;grid-template-columns:41% 1fr;gap:54px;align-items:start}
+
+/* ---------- the opening form fragment ---------- */
+#fragment{
+  position:relative;border:4px solid var(--ink);background:var(--ground);
+  padding:26px 30px;display:flex;align-items:baseline;gap:22px;
+  font-size:36px;font-weight:600;line-height:1.2;margin-top:6px;
+}
+#fragment .ln{font-weight:900;font-size:42px}
+#fragment .dots{flex:1 1 auto;border-bottom:4px dotted var(--ink-3);transform:translateY(-10px)}
+#fragment .amt{position:relative;font-weight:900;font-size:52px;padding:0 20px;white-space:nowrap}
+#fragment .amt svg{position:absolute;left:-10px;top:-22px;width:calc(100% + 20px);height:calc(100% + 44px);overflow:visible}
+#fragment-cap{font-size:28px;color:var(--ink-3);font-weight:600;margin-top:14px;letter-spacing:.04em}
+
+/* ---------- criteria ---------- */
+.criteria{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+.criteria li{display:flex;align-items:baseline;gap:26px;border-top:3px solid var(--rule);padding-top:18px}
+.criteria .k{font-weight:900;font-size:36px;color:var(--green);flex:0 0 auto;width:66px}
+.criteria .h{font-weight:800;font-size:44px;letter-spacing:-.01em;flex:0 0 auto;width:360px}
+.criteria .d{font-size:40px;color:var(--ink-2);line-height:1.26}
+
+/* ---------- stacked compare ---------- */
+.split{border:4px solid var(--ink)}
+.split>div{padding:30px 34px;display:flex;flex-direction:column;gap:12px}
+.split>div:first-child{background:var(--flag-wash);border-bottom:4px solid var(--ink)}
+.split>div:last-child{background:var(--green-wash)}
+.split .cap{font-size:28px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+.split>div:first-child .cap{color:var(--flag)}
+.split>div:last-child .cap{color:var(--green-deep)}
+.split .row{font-size:38px;line-height:1.26;color:var(--ink-2)}
+.split .big{font-size:84px;font-weight:900;letter-spacing:-.025em;line-height:1}
+.split .big span{font-size:.44em;font-weight:700;letter-spacing:0}
+.split>div:first-child .big{color:var(--flag)}
+.split>div:last-child .big{color:var(--green-deep)}
+
+/* ---------- math stack ---------- */
+.math{border:4px solid var(--ink);background:var(--green-wash);padding:32px 38px;display:flex;flex-direction:column;gap:12px}
+.math .line{display:flex;align-items:baseline;gap:24px}
+.math .line .v{font-weight:900;font-size:68px;letter-spacing:-.025em;width:400px;flex:0 0 auto}
+.math .line .l{font-size:40px;font-weight:500;color:var(--ink-2);line-height:1.2}
+.math .line.total{border-top:4px solid var(--ink);padding-top:16px;margin-top:6px}
+.math .line.total .v{color:var(--green-deep);font-size:84px}
+
+/* ---------- ratio table ---------- */
+.ratio{border:4px solid var(--ink)}
+.ratio .rrow{display:flex;justify-content:space-between;align-items:baseline;gap:22px;padding:18px 26px;border-bottom:3px solid var(--rule)}
+.ratio .rrow:last-child{border-bottom:0}
+.ratio .rl{font-size:36px;color:var(--ink-2);line-height:1.2}
+.ratio .rl b{display:block;font-size:24px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-top:6px}
+.ratio .rv{font-size:52px;font-weight:900;letter-spacing:-.025em;white-space:nowrap}
+.ratio .bad{background:var(--flag-wash)}
+.ratio .bad .rv,.ratio .bad .rl b{color:var(--flag)}
+.ratio .good{background:var(--green-wash)}
+.ratio .good .rv,.ratio .good .rl b{color:var(--green-deep)}
+.ratio .add .rv{color:var(--green)}
+
+/* ---------- product callout ---------- */
+.product{background:var(--ink);color:#fff;padding:24px 30px;margin:0 0 24px}
+.product .ph{font-size:26px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#6FBFA4;margin-bottom:10px}
+.product .pt{font-size:50px;font-weight:900;letter-spacing:-.02em;line-height:1.08}
+.product .pt span{color:#6FBFA4;margin:0 .28em}
+.why{margin-top:24px;border:4px solid var(--green);background:var(--green-wash);padding:24px 28px}
+.why .wh{font-size:26px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green-deep);margin-bottom:10px}
+.why .wb{font-size:36px;line-height:1.3;color:var(--ink)}
+
+/* ---------- two vignettes side by side ---------- */
+.twoup{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin:0 0 32px;align-items:start}
+
+/* ---------- qualification strip ---------- */
+.qual{display:grid;grid-template-columns:repeat(4,1fr);border:4px solid var(--ink);margin:0}
+.qual>div{padding:26px 24px;border-right:4px solid var(--ink);display:flex;flex-direction:column;gap:10px}
+.qual>div:last-child{border-right:0}
+.qual .qv{font-size:62px;font-weight:900;letter-spacing:-.03em;line-height:1}
+.qual .ql{font-size:30px;color:var(--ink-2);line-height:1.22}
+.qual .none{background:var(--green-wash)}
+.qual .none .qv{color:var(--green-deep)}
+
+/* ---------- walk-off ---------- */
+.walkgrid{display:grid;grid-template-columns:1fr auto;gap:84px;align-items:center}
+.qr{display:flex;flex-direction:column;align-items:center;gap:22px}
+.qrbox{width:620px;height:620px}
+.qrbox.sm{width:700px;height:700px}
+/* Taller title frame: a short wide card forces the camera to zoom out to fit
+   its width, which drags the box card into the bottom of the opening shot. */
+#title{padding-top:120px;padding-bottom:120px}
+.qrbox img{display:block;width:100%;height:100%}
+.qrcap{font-size:32px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.walkoff{font-size:220px;font-weight:900;line-height:.9;letter-spacing:-.04em;margin:0 0 36px}
+.walksub{font-size:74px;font-weight:600;line-height:1.16;color:var(--green-deep);margin:0 0 24px}
+.walkact{font-size:58px;font-weight:700;line-height:1.2;letter-spacing:-.01em;color:var(--ink);margin:0}
+
+/* ---------- contact ---------- */
+.contact{border-top:8px solid var(--green);padding-top:26px;margin-top:30px}
+.contact .cname{font-size:72px;font-weight:900;letter-spacing:-.025em;line-height:1.04}
+.contact .cdet{font-size:46px;font-weight:600;color:var(--green-deep);margin-top:10px}
+
+/* ---------- deadlock ---------- */
+.deadlock{display:flex;flex-direction:column;gap:18px}
+.deadlock .side{border:4px solid var(--ink);background:var(--flag-wash);padding:26px 30px}
+.deadlock .side .t{font-size:44px;font-weight:800;line-height:1.14;margin-bottom:8px}
+.deadlock .side .s{font-size:36px;color:var(--ink-2);line-height:1.22}
+.deadlock .mid{font-size:34px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--flag);text-align:center}
+
+/* ---------- numbered steps ---------- */
+.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:flex;flex-direction:column;gap:16px}
+.steps li{counter-increment:s;display:flex;align-items:flex-start;gap:24px;font-size:44px;line-height:1.24}
+.steps li::before{
+  content:counter(s);flex:0 0 auto;width:62px;height:62px;border-radius:50%;
+  background:var(--green);color:#fff;font-weight:900;font-size:34px;
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- three-up ---------- */
+.threeup{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;margin:18px 0 28px}
+.threeup div{border-top:8px solid var(--green);padding-top:34px}
+.threeup .t{font-size:48px;font-weight:900;letter-spacing:-.015em;margin-bottom:16px;line-height:1.1}
+.threeup .s{font-size:36px;color:var(--ink-2);line-height:1.34}
+.threeup.four{grid-template-columns:repeat(4,1fr);gap:30px}
+.threeup.four .t{font-size:42px}
+.threeup.four .s{font-size:32px}
+.threeup.five{grid-template-columns:repeat(5,1fr);gap:40px}
+.threeup.five .t{font-size:38px}
+.threeup.five .s{font-size:30px}
+
+.hugenum{font-size:330px;font-weight:900;letter-spacing:-.045em;line-height:.86;color:var(--green);margin:0 0 22px}
+
+/* ---------- asks ---------- */
+.asks{display:flex;flex-direction:column;gap:28px}
+.asks .ask{border-left:10px solid var(--green);padding-left:32px}
+.asks .who{font-size:34px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green-deep);margin-bottom:10px}
+.asks .what{font-size:52px;font-weight:600;line-height:1.24}
+
+.tag{
+  display:inline-block;align-self:flex-start;
+  font-size:26px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--flag);background:var(--flag-wash);
+  border:3px solid var(--flag);padding:8px 16px;margin-bottom:22px;
+}
+.tag.alt{color:var(--green-deep);background:var(--green-wash);border-color:var(--green)}
+
+/* ---------- HUD ---------- */
+#bar{position:fixed;top:0;left:0;height:4px;background:var(--green);width:0;transition:width .45s ease;z-index:30}
+.hud{
+  position:fixed;z-index:30;font-family:var(--sans);
+  font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--ink-3);
+  user-select:none;pointer-events:none;
+}
+#pos{left:16px;bottom:14px}
+#pos b{color:var(--ink);font-weight:800}
+#clock{right:16px;bottom:12px;font-size:26px;font-weight:800;color:var(--ink-2);display:none}
+#clock.warn{color:var(--flag)}
+#hint{left:50%;bottom:14px;transform:translateX(-50%);text-align:center;transition:opacity .8s ease}
+#hint.gone{opacity:0}
+#notes{
+  position:fixed;z-index:31;left:0;right:0;bottom:0;
+  background:#0B1F1A;color:#E8F5F0;padding:16px 20px 20px;display:none;
+  font-size:15px;line-height:1.52;max-height:44vh;overflow:auto;
+}
+#notes.on{display:block}
+#notes .nh{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#6FBFA4;font-weight:800;margin-bottom:8px}
+#notes .nb{max-width:84ch}
+#notes .nb em{color:#9FE0C8;font-style:normal;font-weight:700}
+
+/* ---------- unattended loop chrome ---------- */
+/* Both are fixed, outside #world, so they never scale or rotate with the camera. */
+#band,#badge{display:none}
+body.loop #band{display:flex}
+body.loop #badge{display:flex}
+body.loop #pos,body.loop #hint,body.loop #clock{display:none}
+/* The badge carries the loop's own code, so the walk-off card's QR stands down
+   rather than putting two different codes on screen at once. */
+body.loop #tagline .qr{display:none}
+
+#band{
+  position:fixed;left:0;right:0;bottom:0;height:52px;z-index:40;
+  background:var(--ground);border-top:1px solid var(--rule);
+  align-items:center;gap:14px;padding:0 20px;
+  font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-2);
+}
+#band img{display:block;width:auto}
+#band span{white-space:nowrap}
+.banddisc{font-weight:500;color:var(--ink-3)}
+.bandtag{font-weight:700;color:var(--green-deep)}
+.bandlogo{height:26px}
+.bandehl{height:36px}
+.banddot{color:var(--ink-3)}
+.bandgap{flex:1 1 auto}
+
+#badge{
+  position:fixed;right:20px;bottom:72px;z-index:40;
+  background:var(--ground);border:1px solid var(--rule);border-radius:10px;
+  box-shadow:0 8px 28px rgba(11,31,26,.10),0 2px 6px rgba(11,31,26,.06);
+  padding:14px 16px;gap:16px;align-items:center;
+}
+.badgeqr{width:132px;height:132px;display:block}
+.badgetxt{text-align:right}
+.badgename{font-size:26px;font-weight:900;letter-spacing:-.02em;color:var(--ink);line-height:1.1}
+.badgephone{font-size:21px;font-weight:700;color:var(--green-deep);margin-top:4px}
+.badgecap{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-top:10px}
+
+/* ---------- keyboard help ---------- */
+#help{
+  position:fixed;inset:0;z-index:60;display:none;
+  align-items:center;justify-content:center;
+  background:rgba(11,31,26,.34);
+}
+#help.on{display:flex}
+.helpcard{
+  background:var(--ground);border:1px solid var(--rule);border-radius:12px;
+  box-shadow:0 18px 52px rgba(11,31,26,.20);
+  padding:26px 30px;max-width:520px;font-family:var(--sans);
+}
+.helphead{font-size:13px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--green-deep);margin-bottom:18px}
+.helpgrid{display:grid;grid-template-columns:auto 1fr;gap:10px 20px;align-items:baseline}
+.helpgrid kbd{
+  font-family:var(--sans);font-size:12px;font-weight:700;color:var(--ink);
+  background:#f1f4f3;border:1px solid var(--rule);border-radius:5px;
+  padding:3px 8px;white-space:nowrap;
+}
+.helpgrid span{font-size:14px;color:var(--ink-2)}
+.helpfoot{margin-top:20px;padding-top:16px;border-top:1px solid var(--rule);font-size:12px;line-height:1.5;color:var(--ink-3)}
+.helpfoot code{font-size:12px;font-weight:700;color:var(--green-deep)}
+
+@media (max-width:640px){
+  #pos,#hint{font-size:11px}
+  #clock{font-size:19px}
+  #notes{font-size:13px}
+}
+@media (prefers-reduced-motion:reduce){ #bar{transition:none} }
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<div id="stage">
+  <div id="world">
+
+    <svg id="links" aria-hidden="true"></svg>
+
+    <!-- ============ TITLE ============ -->
+    <section class="card soft" id="title" data-rect="-1375,-1400,2750">
+      <div class="walkgrid">
+        <div>
+          <div class="eyebrow">Doma Loans <span class="sep">/</span> Wealth Summit 2026</div>
+          <h1>Many paths,<br>one front door</h1>
+          <p class="fine"><strong>Gaurav Vaish</strong> &nbsp;/&nbsp; Doma Loans &nbsp;/&nbsp; 510.513.9369 &nbsp;/&nbsp; gvaish@domaloans.com &nbsp;/&nbsp; NMLS #2122782</p>
+        </div>
+        <div class="qr">
+          <div class="qrbox sm"><img src="qr-sm.svg" alt="QR code linking to the Doma Loans contact card"></div>
+          <div class="qrcap">Scan to save my details</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE BOX ============ -->
+    <section class="card framed" id="box" data-rect="-850,400,1700">
+      <div class="eyebrow">The instrument</div>
+      <h2>The box</h2>
+      <ul class="criteria">
+        <li><span class="k">01</span><span class="h">W-2 income</span><span class="d">Two years. Ideally one employer.</span></li>
+        <li><span class="k">02</span><span class="h">Tax returns</span><span class="d">Two years. And it reads one line.</span></li>
+        <li><span class="k">03</span><span class="h">Debt-to-income</span><span class="d">Your debts measured against that line.</span></li>
+        <li><span class="k">04</span><span class="h">Loan size</span><span class="d">Up to $1,249,125 in Alameda County.</span></li>
+      </ul>
+
+      <div id="fragment">
+        <span class="ln">31</span>
+        <span>Net profit or (loss)</span>
+        <span class="dots"></span>
+        <span class="amt">$148,000
+          <svg viewBox="0 0 320 130" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M158 10 C 62 8, 12 34, 14 66 C 16 98, 78 120, 162 119 C 248 118, 306 94, 304 62 C 302 30, 244 9, 146 12" fill="none" stroke="#008D69" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </div>
+      <div id="fragment-cap">Schedule C (Form 1040) &nbsp;/&nbsp; this is the line</div>
+
+      <p class="fine">2026 conforming limit, Alameda County, one unit. National baseline: $832,750. Source: FHFA.</p>
+    </section>
+
+    <!-- ============ THE NUMBER ============ -->
+    <section class="card" id="num" data-rect="-950,-2820,1900">
+      <div class="hugenum">16,500,000</div>
+      <p class="lede">Americans are self-employed - about one in ten workers.</p>
+
+      <p class="fine">U.S. Bureau of Labor Statistics, Current Population Survey, June 2026. Incorporated and unincorporated self-employed combined.</p>
+    </section>
+
+    <!-- ============ 01 BUSINESS OWNER ============ -->
+    <div class="label" id="lab1" data-rect="-5700,-4595,2200,230" data-rot="0">
+      <span class="n">01</span><span class="t">The business owner</span>
+    </div>
+
+    <section class="card soft" id="s1" data-rect="-5700,-3620,2200" data-rot="-30">
+      <div class="eyebrow">Scenario 01 <span class="sep">/</span> Bank statement</div>
+      <h2>The business owner who did everything right</h2>
+
+      <div class="body2">
+        <div class="vignette">She runs a fourteen-person practice in Fremont. $1.1&nbsp;million in receipts. Her CPA structured the entity, maxed the retirement plan, took Section&nbsp;179 and captured QBI.<br><br>Line&nbsp;31 came out at $148,000.<br><br>She is delighted. Her lender is not.</div>
+
+        <div class="split" id="s1math">
+          <div>
+            <div class="cap">What the box sees</div>
+            <div class="row">Schedule C, line 31</div>
+            <div class="big">$12,333<span> / mo</span></div>
+            <div class="row">$148,000 a year</div>
+          </div>
+          <div>
+            <div class="cap">What a bank statement program sees</div>
+            <div class="row">24 months of business deposits, less a 50% expense factor</div>
+            <div class="big">$43,333<span> / mo</span></div>
+            <div class="row">from $1,040,000 a year in deposits</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kicker">3.5&times; the qualifying income. Same business, same bank account, same woman. Her CPA did not cost her the house - the form did.</div>
+
+      <p class="fine"><strong>For the CPAs in the room:</strong> a CPA-prepared profit-and-loss statement can often support an expense factor well below the default 50%. That letter can be worth more to your client than another deduction. &nbsp;-&nbsp; Figures illustrative, not an offer or commitment. Statement periods, expense factors and eligibility vary by program and lender.</p>
+    </section>
+
+    <!-- ============ 02 PORTFOLIO ============ -->
+    <div class="label" id="lab2" data-rect="3500,-4595,2200,230" data-rot="0">
+      <span class="n">02</span><span class="t">The portfolio</span>
+    </div>
+
+    <section class="card soft" id="s2" data-rect="3500,-3620,2200" data-rot="30">
+      <div class="eyebrow">Scenario 02 <span class="sep">/</span> Asset depletion</div>
+      <h2>The buyer with $3.2 million and no income</h2>
+
+      <div class="body2">
+        <div class="vignette">He sold his stake two years ago. Fifty-one years old. $3.2&nbsp;million in a brokerage account, another $900,000 in retirement.<br><br>No W-2 since, and no intention of another one.<br><br>He wants a $2.8&nbsp;million house and he is putting 40% down.</div>
+
+        <div>
+          <div class="math" id="s2math">
+            <div class="line"><span class="v">$3,200,000</span><span class="l">eligible assets</span></div>
+            <div class="line"><span class="v">&divide; 120</span><span class="l">months</span></div>
+            <div class="line total"><span class="v">$26,667</span><span class="l">per month of qualifying income</span></div>
+          </div>
+          <p class="fine">No employer. No W-2. Documented, underwritable income.</p>
+        </div>
+      </div>
+
+      <div class="kicker" id="s2turn">So why borrow at all? He could write the check. Because writing the check means liquidating $1.7&nbsp;million - long-term gains, net investment income tax, and California on top. The mortgage is not the expensive option. It is the tax-efficient one.</div>
+
+      <p class="fine">You spent this morning learning exactly that. This is the same lesson with a deed attached. &nbsp;-&nbsp; Figures illustrative, not an offer or commitment. Divisors, eligible account types, seasoning and age restrictions vary by program. Nothing here is tax advice; that is the person who sold you the ticket.</p>
+    </section>
+
+    <!-- ============ 02b BLENDED ============ -->
+    <section class="card soft" id="s2b" data-rect="3500,-250,2200" data-rot="42">
+      <div class="tag alt">Variation &nbsp;/&nbsp; full doc <b>+</b> asset depletion</div>
+      <h2>The W-2 earner who ran out of ratio, not money</h2>
+
+      <div class="body2">
+        <div class="vignette">Staff engineer. $420,000 in base and bonus, fully documented, W-2 in hand. $1.8&nbsp;million in vested company stock.<br><br>He wants a $3.2&nbsp;million house with 25% down.<br><br>Underwriting puts him at 57% debt-to-income and stops.</div>
+
+        <div class="ratio" id="s2bratio">
+          <div class="rrow"><span class="rl">W-2 income, documented</span><span class="rv">$35,000 / mo</span></div>
+          <div class="rrow"><span class="rl">Monthly obligations</span><span class="rv">$19,900 / mo</span></div>
+          <div class="rrow bad"><span class="rl">DTI on the W-2 alone <b>Declined</b></span><span class="rv">57%</span></div>
+          <div class="rrow add"><span class="rl">Asset depletion, $1.8M &divide; 120 months</span><span class="rv">+ $15,000 / mo</span></div>
+          <div class="rrow good"><span class="rl">Blended DTI <b>Approved</b></span><span class="rv">40%</span></div>
+        </div>
+      </div>
+
+      <div class="kicker">He never sold a share, and he never pledged one. Pledging would have made it worse - a securities-backed line is one more monthly obligation on the very ratio that was already failing.</div>
+
+      <p class="fine">Vested shares are an asset, and agency underwriting will not turn an asset into income. Blending full documentation with asset depletion does exactly that: no liquidation event, no capital gain, no margin call. &nbsp;-&nbsp; Figures illustrative, not an offer or commitment. Eligible account types, divisors, concentration limits and maximum DTI vary by program and lender.</p>
+    </section>
+
+    <!-- ============ 03 TWO HOUSES ============ -->
+    <div class="label" id="lab3" data-rect="-1200,3950,2400,230" data-rot="0">
+      <span class="n">03</span><span class="t">The two houses</span>
+    </div>
+
+    <section class="card soft" id="s3" data-rect="-1200,5100,2400" data-rot="-24">
+      <div class="eyebrow">Scenario 03 <span class="sep">/</span> Bridge</div>
+      <h2>The family with $1.3 million in the house they already own</h2>
+
+      <div class="body2">
+        <div>
+          <div class="vignette">Their home has done exactly what they hoped it would do. It is worth $1.9&nbsp;million, with $600,000 left on it.<br><br>The family has grown, and the house that fits them now is $2.4&nbsp;million.<br><br>The down payment already exists. It is sitting in the walls of the home they are living in today.</div>
+          <div class="deadlock" style="margin-top:30px">
+            <div class="side">
+              <div class="t">To buy, they need the equity</div>
+              <div class="s">and the equity requires selling</div>
+            </div>
+            <div class="mid">&darr; &nbsp; deadlock &nbsp; &uarr;</div>
+            <div class="side">
+              <div class="t">To sell, they need somewhere to go</div>
+              <div class="s">and somewhere to go requires buying</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s3steps">
+          <div class="product">
+            <div class="ph">The bridge</div>
+            <div class="pt">12 months <span>/</span> no interest <span>/</span> no payments</div>
+          </div>
+
+          <ol class="steps">
+            <li>Borrow against the equity in the departing residence</li>
+            <li>Make a clean, non-contingent offer on the new home</li>
+            <li>Close, and move</li>
+            <li>Sell on your timeline, not a buyer's</li>
+            <li>Retire the bridge out of the sale proceeds</li>
+          </ol>
+
+          <div class="why">
+            <div class="wh">Why it clears underwriting</div>
+            <div class="wb">No monthly payment means no monthly obligation, so the bridge never enters the debt-to-income calculation at all. And if they rent the departing house rather than rushing the sale, that rental income counts toward qualifying too.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kicker">They never had a money problem. They had a sequencing problem.</div>
+
+      <p class="fine">A contingent offer in this market is usually a losing offer. &nbsp;-&nbsp; Figures illustrative, not an offer or commitment. The 12-month, no-interest, no-payment structure is a specific program with its own eligibility, equity and exit requirements, and is subject to change and to underwriting approval. Departing-residence rental income has its own documentation and vacancy-factor requirements.</p>
+    </section>
+
+    <!-- ============ 04 NO INCOME / NO EMPLOYMENT ============ -->
+    <div class="label" id="lab4" data-rect="-5800,-700,2400,230" data-rot="0">
+      <span class="n">04</span><span class="t">No income, no employment</span>
+    </div>
+
+    <section class="card soft" id="s4" data-rect="-5800,650,2400" data-rot="36">
+      <div class="eyebrow">Scenario 04 <span class="sep">/</span> Reserves and credit</div>
+      <h2>No income. No employment. No worries.</h2>
+
+      <div class="twoup">
+        <div class="vignette">Founder, four years in. The company is real, the board is real, and the S-1 is being drafted.<br><br>His W-2 says almost nothing, because almost nothing is what he pays himself.</div>
+        <div class="vignette">She is buying out her former spouse's share of the home her children grew up in. The settlement is signed.<br><br>The buyout is due in January. Her payout lands in March.</div>
+      </div>
+
+      <div class="qual" id="s4qual">
+        <div><div class="qv">2 to 12</div><div class="ql">months of cash reserves</div></div>
+        <div><div class="qv">$3M</div><div class="ql">maximum loan amount</div></div>
+        <div class="none"><div class="qv">None</div><div class="ql">income documented</div></div>
+        <div class="none"><div class="qv">None</div><div class="ql">employment verified</div></div>
+      </div>
+
+      <div class="kicker">Neither of them is short of money. Both of them are early. Underwriting cannot measure income that has not arrived yet, so this program stops trying and measures what is already there: the reserves, the credit, and the down payment.</div>
+
+      <p class="fine">Owner-occupied only. Figures and timelines illustrative, not an offer or commitment; reserve, credit and loan-amount requirements vary by program and are subject to underwriting approval. Qualification here is still a documented underwriting decision, not the absence of one.</p>
+    </section>
+
+    <!-- ============ THE THREAD ============ -->
+    <section class="card" id="thread" data-rect="-1300,2400,2600">
+      <div class="eyebrow">The pattern</div>
+      <h2>Many paths. One door.</h2>
+      <div class="threeup five">
+        <div><div class="t">The income was real</div><div class="s">$1.04M a year, sitting in the business account</div></div>
+        <div><div class="t">The money was real</div><div class="s">$3.2M, documented and seasoned</div></div>
+        <div><div class="t">The stock was real</div><div class="s">$1.8M vested, and never sold</div></div>
+        <div><div class="t">The equity was real</div><div class="s">$1.3M, in the home they already own</div></div>
+        <div><div class="t">The reserves were real</div><div class="s">counted and verified, before the payout lands</div></div>
+      </div>
+      <div class="kicker">What failed was the measurement, not the borrower.</div>
+    </section>
+
+    <!-- ============ THE STANDARD ============ -->
+    <section class="card framed" id="standard" data-rect="-1050,7600,2100" data-rot="1.2">
+      <div class="eyebrow">The standard</div>
+      <h2>Common sense, fully documented.</h2>
+      <p class="lede">Every borrower in this talk put real money down, carries strong credit, and holds verified reserves.</p>
+      <div class="kicker">A good loan measures the right thing and then proves it. That is all any of these were.</div>
+    </section>
+
+    <!-- ============ CLOSE ============ -->
+    <section class="card soft" id="close" data-rect="-1100,9100,2200">
+      <div class="eyebrow">Doma Loans</div>
+      <h2>If you take one thing away</h2>
+      <div class="asks">
+        <div class="ask">
+          <div class="who">If you are buying</div>
+          <div class="what">Bring two years of bank statements, not two years of returns.</div>
+        </div>
+        <div class="ask">
+          <div class="who">If you prepare taxes</div>
+          <div class="what">Your P&amp;L letter can move a client's qualifying income by six figures.</div>
+        </div>
+        <div class="ask">
+          <div class="who">If you sell real estate</div>
+          <div class="what">Stop writing contingent offers. There is another way to structure the deal.</div>
+        </div>
+      </div>
+      <div class="contact">
+        <div class="cname">Gaurav Vaish</div>
+        <div class="cdet">510.513.9369 &nbsp;&nbsp;/&nbsp;&nbsp; gvaish@domaloans.com</div>
+      </div>
+
+      <p class="fine">Gaurav Vaish, NMLS&nbsp;#2122782 &nbsp;/&nbsp; Doma Loans, Company NMLS&nbsp;#2649550 &nbsp;/&nbsp; Equal Housing Lender. All scenarios and figures in this presentation are illustrative and are not an offer, commitment or guarantee of credit. Program eligibility, rates and terms vary and are subject to underwriting approval. Not tax or legal advice.</p>
+    </section>
+
+    <!-- ============ TAGLINE / WALK-OFF ============ -->
+    <section class="card" id="tagline" data-rect="-1450,11500,2900">
+      <div class="walkgrid">
+        <div>
+          <h2 class="walkoff">We read more<br>than one line.</h2>
+          <div class="walksub">A no is a measurement, not a verdict.</div>
+          <div class="walkact">Your money is real. Let's go document it.</div>
+          <div class="contact">
+            <div class="cname">Gaurav Vaish</div>
+            <div class="cdet">510.513.9369 &nbsp;&nbsp;/&nbsp;&nbsp; gvaish@domaloans.com</div>
+          </div>
+        </div>
+        <div class="qr">
+          <div class="qrbox"><img src="qr-cl.svg" alt="QR code linking to the Doma Loans contact card"></div>
+          <div class="qrcap">Scan to save my details</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="hud" id="pos"><b>1</b> / 21</div>
+<div class="hud" id="clock">15:00</div>
+<div class="hud" id="hint">&larr; &rarr; or space to move &nbsp;&nbsp;/&nbsp;&nbsp; press ? for all shortcuts</div>
+
+<div id="help">
+  <div class="helpcard">
+    <div class="helphead">Keyboard</div>
+    <div class="helpgrid">
+      <kbd>&rarr; &darr; Space PgDn</kbd><span>Next stop</span>
+      <kbd>&larr; &uarr; PgUp</kbd><span>Previous stop</span>
+      <kbd>1 &nbsp;Home</kbd><span>Back to the title</span>
+      <kbd>O &nbsp;End &nbsp;Esc</kbd><span>Jump to the closing card</span>
+      <kbd>F</kbd><span>Full screen</span>
+      <kbd>N</kbd><span>Presenter notes</span>
+      <kbd>T</kbd><span>15:00 countdown</span>
+      <kbd>X</kbd><span>Unattended loop</span>
+      <kbd>?</kbd><span>This list</span>
+    </div>
+    <div class="helpfoot">Click or tap advances; swipe works on touch. Open with <code>?loop</code> on the URL to start in loop mode at the booth. A clicker's page keys work as next and previous.</div>
+  </div>
+</div>
+
+<div id="notes"><div class="nh" id="notes-h">Presenter notes</div><div class="nb" id="notes-b"></div></div>
+
+<div id="badge">
+  <div class="badgetxt">
+    <div class="badgename">Gaurav Vaish</div>
+    <div class="badgephone">510.513.9369</div>
+    <div class="badgecap">Scan to save my details</div>
+  </div>
+  <img class="badgeqr" src="qr-il.svg" alt="QR code linking to the Doma Loans contact card">
+</div>
+
+<div id="band">
+  <img class="bandlogo" src="doma.svg" alt="Doma Loans Inc">
+  <span class="bandtag">Make lending make sense</span>
+  <span class="banddot">&middot;</span>
+  <span>www.domaloans.com</span>
+  <span class="banddot">&middot;</span>
+  <span>510.513.9369</span>
+  <span class="bandgap"></span>
+  <span class="banddisc">Illustrative. Not a commitment to lend.</span>
+  <span class="bandgap"></span>
+  <span>NMLS #2122782 &nbsp;&middot;&nbsp; Company NMLS #2649550</span>
+  <img class="bandehl" src="ehl.svg" alt="Equal Housing Lender">
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var world  = document.getElementById('world');
+  var stage  = document.getElementById('stage');
+  var bar    = document.getElementById('bar');
+  var posEl  = document.getElementById('pos');
+  var clock  = document.getElementById('clock');
+  var hint   = document.getElementById('hint');
+  var notes  = document.getElementById('notes');
+  var notesH = document.getElementById('notes-h');
+  var notesB = document.getElementById('notes-b');
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- unattended loop ----------------
+     Entered with ?loop on the URL, or toggled with L. The presented path is
+     untouched: with loop off, every value below is inert. */
+  var LOOP_INSET = 252;   // band + badge + margins, kept clear of the canvas
+  var LOOP_DWELL = 5000;  // normal stop
+  var LOOP_WIDE  = 4000;  // the three pull-backs; nothing on them to read
+  var LOOP_LAST  = 9000;  // hold the tagline before wrapping
+  var LOOP_IDLE  = 45000; // resume this long after someone stops touching it
+
+  var loop = /[?&]loop\b/.test(location.search);
+  var loopTimer = null, idleTimer = null, wakeLock = null, paused = false;
+
+  // The canvas only owns the space above the chrome, so the camera fits into a
+  // shorter viewport and centres on that region rather than on the window.
+  function viewH(){ return window.innerHeight - (loop ? LOOP_INSET : 0); }
+  function viewCY(){ return viewH() / 2; }
+
+  function dwellFor(i){
+    if (i === STEPS.length - 1) return LOOP_LAST;
+    return STEPS[i].el ? LOOP_DWELL : LOOP_WIDE;
+  }
+
+  function scheduleNext(){
+    clearTimeout(loopTimer);
+    if (!loop || paused) return;
+    loopTimer = setTimeout(function(){
+      go(idx + 1 >= STEPS.length ? 0 : idx + 1);
+    }, dwellFor(idx));
+  }
+
+  // Someone walked up and touched it: hand over control, take it back when they leave.
+  function pauseLoop(){
+    if (!loop) return;
+    paused = true;
+    clearTimeout(loopTimer); loopTimer = null;
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function(){ paused = false; scheduleNext(); }, LOOP_IDLE);
+  }
+
+  function keepAwake(){
+    if (!('wakeLock' in navigator)) return;
+    navigator.wakeLock.request('screen').then(function (w) { wakeLock = w; }, function () {});
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (loop && document.visibilityState === 'visible') keepAwake();
+  });
+
+  function setLoop(on){
+    loop = on;
+    paused = false;
+    document.body.classList.toggle('loop', on);
+    clearTimeout(loopTimer); clearTimeout(idleTimer);
+    if (on){ keepAwake(); }
+    else if (wakeLock){ try { wakeLock.release(); } catch (e) {} wakeLock = null; }
+    layout();
+    go(idx, true);
+  }
+
+  var WIDE = [-6100,-4700,12050,11800];
+
+  var STEPS = [
+    { el:'#title', name:'Title', time:'0:00',
+      note:'THE ONE PART THAT CHANGES ON THE DAY. Listen to the speakers before you and name what they actually said, then collapse all of it into one word. <em>"Everyone who has spoken today has been talking about the same thing under a different name. Tax efficiency. Appreciation. Square footage. A credit facility."</em> Beat. <em>"All of it is leverage."</em> Beat. <em>"And nobody has answered the only question that actually matters about leverage, which is how you get some."</em> &nbsp;Then the setup, flat and unhurried: <em>"For most of us the answer is a mortgage. And a traditional mortgage asks you for exactly two things. Show me enough income. Put down twenty to twenty-five percent."</em> &nbsp;Then the turn, which is the reason they will listen to the next fourteen minutes: <em>"Both of those are brakes. The income test punishes you for every dollar your CPA legally saved you this morning. The down payment ties up capital you were going to deploy somewhere else. So you end up somewhere strange - the better you get at building wealth, the harder it gets to borrow against it."</em> &nbsp;Name yourself and Doma Loans, then dive. Around fifty seconds. Never past ninety. &nbsp;The code is on this card for the whole opening, which is the longest uninterrupted scanning window in the talk - flag it once, early, then ignore it: <em>"That code saves my details, and it will be up again at the end."</em>' },
+
+    { el:'#box', name:'The box', time:'0:50',
+      note:'Hands first, before you explain anything on the card. <em>"Show of hands - who here has been asked for two years of tax returns?"</em> Wait for them. <em>"Now keep your hand up if you were proud of what those returns said."</em> Let them laugh. <em>"That is the whole talk, in one gesture. Everything you learned this morning about legally lowering that number is the same thing that gets you declined this afternoon."</em> &nbsp;Now the card, and do not read the four criteria aloud verbatim: <em>"This was built for a workforce that had one job and one W-2. Four things. That is the entire instrument."</em> Then point at line 31 at the bottom: <em>"And of every page you file, it reads this one line."</em>' },
+
+    { el:'#num', name:'16.5 million', time:'2:45',
+      note:'Let the number sit before you speak. <em>"Sixteen and a half million Americans are self-employed. One in ten, nationally."</em> &nbsp;OPTIONAL, and entirely your call on the day: this would be the second show of hands inside three minutes, so run it only if the first one landed well and the clock allows. <em>"How many of you are self-employed?"</em> Count roughly, out loud. <em>"Keep them up. Now, how many of you are sitting on serious assets? I won\'t ask you to put a number on it. Let\'s just say millions."</em> Then say what the room can already see. <em>"That is most of you. And almost none of you fit cleanly inside that box."</em> &nbsp;Skipping the hands costs nothing - go straight to the pivot: <em>"The box is not wrong. It is narrow. And a lot of people fall off the edge of it."</em> Then mark what follows as examples, not an inventory: <em>"Let me show you four of them."</em>' },
+
+    { rect:WIDE, name:'Who is outside', time:'3:30',
+      note:'The reveal - the box goes small and the territories appear around it. Do not explain them yet. <em>"A business owner. A portfolio. A family that has outgrown its house. And someone whose money has not arrived yet."</em> Four seconds, then go.' },
+
+    { el:'#s1', name:'01 Business owner', time:'3:50',
+      note:'Tell it as a story, not a case file. Fremont, fourteen people, $1.1M in receipts. Land hard on: <em>"Her CPA did a beautiful job. And line 31 says one hundred forty-eight thousand dollars."</em>' },
+
+    { el:'#s1math', name:'01 The split', time:'4:30',
+      note:'Point top, then bottom. <em>"Same woman. Top is what her tax return says. Bottom is what twenty-four months of her business bank statements say, after a fifty percent haircut for expenses."</em> Pause. <em>"Three and a half times."</em> Then: <em>"Her CPA did not cost her the house. The form did."</em> If the CPAs tense up, give them the P&L-letter line immediately - it makes them part of the fix.' },
+
+    { el:'#s2', name:'02 Portfolio', time:'5:35',
+      note:'Calmer tone than the last one. <em>"Fifty-one. Sold his stake. Three point two million in a brokerage account. No W-2, and no plans to get one."</em> Then flatly: <em>"The box: no income, no loan."</em>' },
+
+    { el:'#s2math', name:'02 The math', time:'6:10',
+      note:'Three lines, slowly. <em>"Three point two million, divided by a hundred and twenty months, is twenty-six thousand six hundred and sixty-seven dollars a month of documented, underwritable income. No employer required."</em>' },
+
+    { el:'#s2turn', name:'02 Why borrow', time:'6:45',
+      note:'The best line in the talk for this room. <em>"So why borrow at all? He could write the check."</em> Wait - somebody will answer. <em>"Because writing the check means liquidating one point seven million dollars. Long-term gains, NIIT, and California on top. The mortgage is not the expensive option. The mortgage is the tax-efficient one."</em> Then nod toward the host: <em>"You spent this morning learning exactly that. This is the same lesson with a deed attached."</em>' },
+
+    { el:'#s2b', name:'02b Blended', time:'7:35',
+      note:'Pivot straight at the room: <em>"That one was a founder. Here is the version half of you are actually living."</em> Staff engineer, $420,000 base and bonus, fully documented, W-2 in hand. <em>"Nothing exotic about this borrower. He just wants a three point two million dollar house in a county where that is an ordinary house."</em> Then land it: <em>"Underwriting puts him at fifty-seven percent debt-to-income and stops. He is not short of money. He is short of ratio."</em>' },
+
+    { el:'#s2bratio', name:'02b The ratio', time:'8:15',
+      note:'Walk the table top to bottom. <em>"Thirty-five thousand a month coming in. Nineteen nine hundred going out. Fifty-seven percent. Declined."</em> Then the turn: <em>"He is holding one point eight million in vested company stock. He cannot pledge it - and frankly you would not want him to, because a securities-backed line is one more monthly payment landing on the exact ratio that is already failing."</em> Beat. <em>"So we do not pledge it. We do not sell it. We count it. One point eight million over a hundred and twenty months is fifteen thousand a month. Blended debt-to-income: forty percent. Approved."</em> Finish on: <em>"He never sold a single share."</em>' },
+
+    { el:'#s3', name:'03 Two houses', time:'9:10',
+      note:'The most relatable one - pick up the pace, and keep it aspirational. This family is not escaping anything; they are growing. <em>"Their house has done exactly what they hoped it would. Worth one point nine, six hundred thousand left on it. One point three million in equity."</em> Then the move: <em>"The family has grown, and the house that fits them now is two point four. The down payment already exists. It is sitting in the walls of the home they are living in tonight."</em> The deadlock almost tells itself from there.' },
+
+    { el:'#s3steps', name:'03 The bridge', time:'9:55',
+      note:'Lead with the product, not the steps: <em>"Twelve months. No interest. No payments."</em> Let it sit - somebody will ask you to say it again. Then the five steps, ten seconds each, no elaboration. Then the underwriting point, which is the part that actually matters: <em>"No monthly payment means no monthly obligation, so the bridge never enters debt-to-income at all. And if they rent the old house instead of rushing the sale, that rental income counts toward qualifying too."</em> Then stop and deliver: <em>"They never had a money problem. They had a sequencing problem."</em> This is the line the realtors will repeat.' },
+
+    { el:'#s4', name:'04 No income', time:'11:00',
+      note:'Open with the name, because it does the work for you: <em>"No income. No employment. No worries."</em> Then both stories fast, left then right. <em>"A founder four years in. The company is real, the board is real, the S-1 is being drafted - and his W-2 says almost nothing, because almost nothing is what he pays himself."</em> Then: <em>"And someone buying out a former spouse\'s share of the family home. The settlement is signed. The buyout is due in January. Her payout lands in March."</em> Land the common thread: <em>"Different lives, same problem. The money is coming. It is just not here yet, and a tax return only knows how to look backwards."</em> Handle the divorce one with respect and keep moving - no editorial, no sympathy voice.' },
+
+    { el:'#s4qual', name:'04 What it takes', time:'11:50',
+      note:'Read across the strip, left to right, and slow right down on the last two cells. <em>"Two to twelve months of cash reserves. Up to three million dollars."</em> Point. <em>"Income documented: none. Employment verified: none."</em> Let that sit - it is the most surprising thing you will say all afternoon. Then defuse it, before anybody in the room holding a license gets nervous: <em>"That is not an absence of underwriting. The reserves get verified. The credit gets pulled. The down payment gets sourced. We just stop pretending a tax return can predict an IPO."</em> &nbsp;DO NOT quote FICO, LTV or loan-amount guidelines from the stage - the published highlights contradict the matrix. If pressed, say you will pull the current matrix and follow up, and take the name.' },
+
+    { rect:WIDE, name:'Pull back', time:'12:40',
+      note:'Silent beat. Let the whole map sit there for a count of three. Then: <em>"Four stories. There are a great many more. Every one of them ends at the same door."</em>' },
+
+    { el:'#thread', name:'The thread', time:'13:00',
+      note:'<em>"The income was real. The money was real. The stock was real. The equity was real. The reserves were real."</em> Beat. <em>"What failed was the measurement, not the borrower."</em> Do not count the paths here - the number on the screen is four because that is what fits in fifteen minutes, not because that is how many exist.' },
+
+    { el:'#standard', name:'Common sense', time:'13:30',
+      note:'Do not name the objection. Most of this room has never heard the industry term for any of this, and saying it out loud only hands them a word to be nervous about. State the standard instead. <em>"Every borrower I have described put real money down, carries strong credit, and has verified reserves. Nothing here was taken on faith."</em> Then the definition, slowly: <em>"A good loan measures the right thing and then proves it. That is all any of these were."</em> If a lender or a realtor raises the jargon in Q&A, answer it plainly then - but never raise it yourself from the stage.' },
+
+    { el:'#close', name:'Close', time:'14:05',
+      note:'Three asks, one per audience: borrowers bring bank statements, CPAs write the P&L letter, realtors stop writing contingent offers. Then close: <em>"If a lender has told you no, the useful question is not whether you qualify. It is which lens they measured you with."</em> Point at the contact block. Stop talking.' },
+
+    { rect:WIDE, name:'The map', time:'14:40',
+      note:'One last pull-back. Say nothing, let them see all four territories at once for a count of two, then go to the final line.' },
+
+    { el:'#tagline', name:'Tagline', time:'14:50',
+      note:'Three lines on the card, but do not read all three aloud - the middle one is for their eyes, not your mouth. Setup and payoff first, as two sentences with a beat between them: <em>"The box reads one line."</em> Beat. <em>"We read more than one."</em> Let the green line land on its own while you stay quiet for two seconds. Then the last thing you say in the whole talk, straight at the room, no flourish after it: <em>"Your money is real. Let\'s go document it."</em> Then stop. Leave this up through Q&A; your number is on it, and Escape or O returns here from anywhere.' }
+  ];
+
+  /* ---------------- geometry ---------------- */
+  function cardOf(el){
+    return (el.classList.contains('card') || el.classList.contains('label')) ? el : el.closest('.card');
+  }
+
+  function rectOfEl(sel){
+    var el = document.querySelector(sel);
+    var card = cardOf(el);
+    var d = card.dataset.rect.split(',').map(Number);
+    var L = d[0], T = d[1], W = card.offsetWidth, H = card.offsetHeight;
+    var rot = Number(card.dataset.rot) || 0;
+    if (el === card) return { cx:L+W/2, cy:T+H/2, w:W, h:H, rot:rot };
+
+    var x = 0, y = 0, n = el;
+    while (n && n !== card){ x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    var w = el.offsetWidth, h = el.offsetHeight;
+    var vx = x + w/2 - W/2, vy = y + h/2 - H/2;
+    var r = rot * Math.PI/180, cos = Math.cos(r), sin = Math.sin(r);
+    return { cx: L+W/2 + vx*cos - vy*sin, cy: T+H/2 + vx*sin + vy*cos, w:w, h:h, rot:rot };
+  }
+
+  function rectOf(step){
+    if (step.el) return rectOfEl(step.el);
+    var r = step.rect;
+    return { cx:r[0]+r[2]/2, cy:r[1]+r[3]/2, w:r[2], h:r[3], rot:0 };
+  }
+
+  function camFor(step){
+    var r = rectOf(step);
+    var pad = step.el ? 0.90 : 0.94;
+    var s = Math.min(window.innerWidth / r.w, viewH() / r.h) * pad;
+    return { x:r.cx, y:r.cy, s:s, r:-(r.rot||0) };
+  }
+
+  function apply(c){
+    world.style.transform =
+      'translate(' + (window.innerWidth/2) + 'px,' + viewCY() + 'px)' +
+      ' rotate(' + c.r + 'deg) scale(' + c.s + ') translate(' + (-c.x) + 'px,' + (-c.y) + 'px)';
+  }
+
+  /* ---------------- layout ---------------- */
+  function layout(){
+    var all = world.querySelectorAll('[data-rect]');
+    for (var i = 0; i < all.length; i++){
+      var el = all[i], d = el.dataset.rect.split(',').map(Number);
+      el.style.left = d[0] + 'px';
+      el.style.top  = d[1] + 'px';
+      el.style.width = d[2] + 'px';
+      if (d.length > 3) el.style.height = d[3] + 'px';
+      var rot = Number(el.dataset.rot) || 0;
+      if (rot) el.style.transform = 'rotate(' + rot + 'deg)';
+    }
+    drawLinks();
+  }
+
+  function drawLinks(){
+    var svg = document.getElementById('links');
+    var x = -6200, y = -4400, w = 12400, h = 12000;
+    svg.setAttribute('viewBox', x + ' ' + y + ' ' + w + ' ' + h);
+    svg.style.left = x + 'px'; svg.style.top = y + 'px';
+    svg.style.width = w + 'px'; svg.style.height = h + 'px';
+    // Lines radiate from the center of the box card, not from the origin.
+    var hub = [0, 935];
+    var targets = [[-4600,-2900],[4600,-2900],[0,5800],[-4600,1400]];
+    var d = '';
+    for (var i = 0; i < targets.length; i++){
+      d += 'M' + hub[0] + ' ' + hub[1] + ' L' + targets[i][0] + ' ' + targets[i][1] + ' ';
+    }
+    // the blended-income variation hangs off the portfolio territory
+    d += 'M4600 -2900 L4600 400 ';
+    svg.innerHTML = '<path d="' + d + '" fill="none" stroke="#D3DCD8" stroke-width="6" ' +
+                    'stroke-dasharray="26 20" stroke-linecap="round"/>';
+  }
+
+  /* ---------------- animation ---------------- */
+  var cam = null, raf = null, idx = 0;
+
+  function ease(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
+  function flyTo(target){
+    if (raf) cancelAnimationFrame(raf);
+    if (!cam || reduced){ cam = target; apply(cam); return; }
+
+    var from  = { x:cam.x, y:cam.y, s:cam.s, r:cam.r };
+    var dist  = Math.sqrt(Math.pow(target.x-from.x,2) + Math.pow(target.y-from.y,2));
+    var viewW = 0.5 * (window.innerWidth/from.s + window.innerWidth/target.s);
+    var ratio = dist / Math.max(viewW, 1);
+    var dip   = Math.min(0.95, Math.log(1 + ratio) * 0.55);
+    var dur   = Math.min(1900, 820 + ratio * 240);
+
+    var logFrom = Math.log(from.s), logTo = Math.log(target.s);
+    var t0 = performance.now();
+
+    function frame(now){
+      var p = Math.min(1, (now - t0) / dur);
+      var t = ease(p);
+      var logS = lerp(logFrom, logTo, t) - dip * Math.sin(Math.PI * t);
+      cam = {
+        x: lerp(from.x, target.x, t),
+        y: lerp(from.y, target.y, t),
+        s: Math.exp(logS),
+        r: lerp(from.r, target.r, t)
+      };
+      apply(cam);
+      raf = p < 1 ? requestAnimationFrame(frame) : null;
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  /* ---------------- navigation ---------------- */
+  function go(i, instant){
+    idx = Math.max(0, Math.min(STEPS.length - 1, i));
+    var target = camFor(STEPS[idx]);
+    if (instant){ if (raf) cancelAnimationFrame(raf); cam = target; apply(cam); }
+    else flyTo(target);
+
+    bar.style.width = (idx / (STEPS.length - 1) * 100) + '%';
+    posEl.innerHTML = '<b>' + (idx + 1) + '</b> / ' + STEPS.length + ' &nbsp; ' + STEPS[idx].name;
+    notesH.textContent = 'Presenter notes - ' + STEPS[idx].name + '  ·  target ' + STEPS[idx].time;
+    notesB.innerHTML = STEPS[idx].note || '';
+    if (idx > 0) startClock();
+    scheduleNext();
+  }
+
+  function next(){ go(idx + 1); }
+  function prev(){ go(idx - 1); }
+
+  /* ---------------- clock ---------------- */
+  var started = null;
+  function startClock(){
+    if (started) return;
+    started = Date.now();
+    setInterval(renderClock, 1000);
+    renderClock();
+  }
+  function renderClock(){
+    if (!started) return;
+    var left = 15*60 - Math.floor((Date.now() - started) / 1000);
+    var neg = left < 0, a = Math.abs(left);
+    var m = Math.floor(a / 60), s = a % 60;
+    clock.textContent = (neg ? '+' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    clock.classList.toggle('warn', left < 180);
+  }
+
+  /* ---------------- input ---------------- */
+  var help = document.getElementById('help');
+  function helpOpen(){ return help.classList.contains('on'); }
+  function setHelp(on){ help.classList.toggle('on', on); }
+
+  document.addEventListener('keydown', function(e){
+    // Leave every browser and OS shortcut alone. Without this, Cmd+L matched
+    // the plain "l" branch and preventDefault blocked the address bar.
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    var k = e.key;
+
+    if (k === '?'){ e.preventDefault(); setHelp(!helpOpen()); return; }
+    if (helpOpen()){ e.preventDefault(); setHelp(false); return; }
+
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === ' ' || k === 'PageDown' || k === 'Enter'){
+      e.preventDefault(); next();
+    } else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace'){
+      e.preventDefault(); prev();
+    } else if (k === 'Home' || k === '1'){ e.preventDefault(); go(0); }
+    else if (k === 'End' || k === 'o' || k === 'O' || k === 'Escape'){ e.preventDefault(); go(STEPS.length - 1); }
+    else if (k === 'n' || k === 'N'){ notes.classList.toggle('on'); }
+    else if (k === 't' || k === 'T'){
+      clock.style.display = clock.style.display === 'block' ? 'none' : 'block';
+      startClock();
+    }
+    else if (k === 'f' || k === 'F'){
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    }
+    if (k === 'x' || k === 'X'){ e.preventDefault(); setLoop(!loop); }
+    else if (loop) pauseLoop();
+    hideHint();
+  });
+
+  help.addEventListener('click', function(){ setHelp(false); });
+  stage.addEventListener('click', function(){
+    if (helpOpen()){ setHelp(false); return; }
+    next(); pauseLoop(); hideHint();
+  });
+
+  var tsx = 0, tsy = 0;
+  stage.addEventListener('touchstart', function(e){
+    tsx = e.changedTouches[0].clientX; tsy = e.changedTouches[0].clientY;
+  }, { passive:true });
+  stage.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - tsx, dy = e.changedTouches[0].clientY - tsy;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){ if (dx < 0) next(); else prev(); }
+  }, { passive:true });
+
+  var hintTimer = setTimeout(hideHint, 7000);
+  function hideHint(){ clearTimeout(hintTimer); hint.classList.add('gone'); }
+
+  window.addEventListener('resize', function(){ layout(); go(idx, true); });
+
+  /* ---------------- boot ---------------- */
+  if (loop){ document.body.classList.add('loop'); keepAwake(); }
+  layout();
+  go(0, true);
+
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ layout(); go(idx, true); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 
 var OUT = 'dist';
-var PAGES = [['source.html', 'index.html'], ['p2.html', 'p2.html']];
+var PAGES = [['p2.html', 'index.html'], ['source.html', 'talk-jk3q.html']];
 
 var ASSETS = [
   'qr-sm.svg', 'qr-cl.svg', 'qr-il.svg', 'qr-p2l.svg', 'qr-p2s.svg', 'qr-p2e.svg',

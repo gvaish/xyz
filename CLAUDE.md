@@ -9,10 +9,16 @@ canvas, 15 minutes, delivered 2026-10-25 in Newark CA.
 
 ## Layout
 
-- `source.html` - the deck. The single source of record; edit this, never `dist/index.html`
-- `build-dist.js` - `node build-dist.js` rewrites `source.html` into `dist/`, swapping
-  the Google Fonts link for local `@font-face`. Exits non-zero if a remote reference
-  survives or a local one is missing from `dist/`
+- `source.html` - the talk deck. The single source of record; edit this, never
+  `dist/talk-jk3q.html`. Kept off the site root so visitors don't land on the talk
+- `p2.html` - the second presentation: 13 company and products cards, presented by hand
+  or looped with `?loop`. Builds to `dist/index.html`, the page the site root serves
+- `qr-p2s.svg`, `qr-p2e.svg`, `qr-p2l.svg` - p2's codes for `go.domaloans.com/ws26p2s`
+  (first card), `ws26p2e` (last card) and `ws26p2l` (loop)
+- `build-dist.js` - `node build-dist.js` rewrites `p2.html` to `dist/index.html` and
+  `source.html` to `dist/talk-jk3q.html`, swapping the Google Fonts link for local
+  `@font-face`. Exits non-zero if a remote reference survives or a local one is missing
+  from `dist/`
 - `dist/` - the deploy bundle and the offline fallback. 264KB, zero network calls.
   **Tracked, and not reproducible from a fresh clone** - `build-dist.js` reads its fonts,
   QR codes and logos from the working directory, and those sources no longer exist, so
@@ -31,7 +37,8 @@ firebase deploy --only hosting:ws2026
 ```
 
 Project `ws2026-001`, target `ws2026`, site `ws2026-dli`, live at
-`https://ws2026.domaloans.com`. Re-run `node build-dist.js` first if `source.html` changed.
+`https://ws2026.domaloans.com`, the talk at `/talk-jk3q.html`. Re-run `node build-dist.js`
+first if `source.html` or `p2.html` changed.
 
 ## Source control
 
