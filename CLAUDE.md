@@ -19,7 +19,9 @@ canvas, 15 minutes, delivered 2026-10-25 in Newark CA.
   `source.html` to `dist/talk-jk3q.html`, swapping the Google Fonts link for local
   `@font-face`. Exits non-zero if a remote reference survives or a local one is missing
   from `dist/`
-- `dist/` - the deploy bundle and the offline fallback. 264KB. The only network call is
+- `photo-stage.jpg`, `photo-gaurav.jpg` - p2's photos, cropped from `../../Photos`
+  (`DSC_7973`, `PZ9_5917`)
+- `dist/` - the deploy bundle and the offline fallback. About 720KB. The only network call is
   Google Analytics (`G-3JX3PYCHJR`, the www.domaloans.com stream, shared by every
   domaloans.com hostname), which fails silently offline.
   **Tracked, and not reproducible from a fresh clone** - `build-dist.js` reads its fonts,

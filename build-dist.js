@@ -11,7 +11,7 @@ var PAGES = [['p2.html', 'index.html'], ['source.html', 'talk-jk3q.html']];
 
 var ASSETS = [
   'qr-sm.svg', 'qr-cl.svg', 'qr-il.svg', 'qr-p2l.svg', 'qr-p2s.svg', 'qr-p2e.svg',
-  'doma.svg', 'ehl.svg',
+  'doma.svg', 'ehl.svg', 'photo-stage.jpg', 'photo-gaurav.jpg',
   'fontfetch/archivo.woff2', 'fontfetch/source-serif-4.woff2'
 ];
 
