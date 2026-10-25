@@ -8,6 +8,9 @@
 node_modules/
 npm-debug.log*
 
+# Generated image originals. The cropped bg-*.jpg files are what the deck uses.
+images/
+
 # dist/ is deliberately tracked. It is not reproducible: build-dist.js reads the
 # fonts, QR codes and logos from the working directory, and those sources are
 # gone, so dist/ holds the only copy of them. It is also the offline fallback

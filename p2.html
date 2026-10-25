@@ -33,12 +33,12 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:#000;overflow:hidden}
-body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);color:#fff;-webkit-font-smoothing:antialiased}
 body.idle{cursor:none}
 
-/* One 1920x1080 stage, scaled to fit whatever the projector gives us. */
+/* One 1920x1080 stage, scaled to fit whatever the projector gives us. Dark green throughout. */
 #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;
-  transform-origin:0 0;background:var(--ground);overflow:hidden}
+  transform-origin:0 0;background:var(--night);overflow:hidden}
 
 .card{position:absolute;inset:0;padding:120px 140px 150px;
   display:flex;flex-direction:column;opacity:0;visibility:hidden;
@@ -51,15 +51,15 @@ body.idle{cursor:none}
 .card.on > :nth-child(4){transition-delay:.24s}
 
 .eyebrow{font-size:30px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--green-deep);margin-bottom:28px}
+  color:var(--mint);margin-bottom:28px}
 h1{font-size:124px;font-weight:900;letter-spacing:-.03em;line-height:1}
-h1 em{font-style:normal;color:var(--green)}
-.lede{font-family:var(--serif);font-size:44px;line-height:1.3;color:var(--ink-2);
+h1 em{font-style:normal;color:var(--mint)}
+.lede{font-family:var(--serif);font-size:44px;line-height:1.3;color:#B7D3C9;
   margin-top:36px;max-width:1400px}
 
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 100px;margin-top:56px}
 .cols h2{font-size:30px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-3);margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid var(--rule)}
+  color:#9FBFB3;margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid rgba(255,255,255,.2)}
 .list{list-style:none}
 .list li{font-size:54px;font-weight:600;line-height:1.45}
 .list li::before{content:"";display:inline-block;width:14px;height:14px;border-radius:50%;
@@ -67,43 +67,56 @@ h1 em{font-style:normal;color:var(--green)}
 
 .chips{display:flex;flex-wrap:wrap;gap:24px;margin-top:72px;max-width:1640px}
 .chips span{font-size:56px;font-weight:600;padding:22px 42px;border-radius:999px;
-  background:#fff;border:2px solid var(--rule)}
-.chips span.hi{background:var(--wash);border-color:var(--mint)}
+  background:rgba(51,217,160,.2);border:2px solid rgba(51,217,160,.7);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.chips span.hi{background:rgba(51,217,160,.42);border-color:var(--mint)}
 
-.note{margin-top:auto;font-family:var(--serif);font-style:italic;font-size:40px;color:var(--green-deep)}
+.note{margin-top:auto;font-family:var(--serif);font-style:italic;font-size:40px;color:#9FD9C2}
 
 /* brand */
 .brand .lede{max-width:1000px}
-body.loop .deckonly{display:none}
 .brand img{width:620px;margin-bottom:64px}
 .brand h1{font-size:150px}
 
-/* giveaway, the one dark card */
-.card.dark{background:var(--night);color:#fff}
-.card.dark .eyebrow{color:var(--mint)}
-.card.dark .lede{color:#B7D3C9}
+/* the light cards, the opener and the giveaway, so they stand out from the dark ones */
+.card.light{background:var(--wash);color:var(--night)}
+.card.light .eyebrow{color:var(--green-deep)}
+.card.light h1 em{color:var(--green)}
+.card.light .lede{color:var(--ink-2)}
+.light .qr{box-shadow:0 16px 48px rgba(11,59,46,.16),0 3px 10px rgba(11,59,46,.08)}
+.light .qrcap{color:var(--night)}
+
+/* giveaway */
 .prize{display:grid;grid-template-columns:1fr 520px;gap:100px;align-items:center;flex:1}
 .prize h1{font-size:190px;line-height:.95}
-.prize h1 em{color:var(--mint)}
-.fine{font-size:28px;color:#8FB3A6;margin-top:40px;line-height:1.5}
-.fine b{color:#fff;font-weight:600}
+.fine{font-size:28px;color:rgba(11,59,46,.8);margin-top:40px;line-height:1.5}
+.fine b{color:var(--night);font-weight:700}
 
 /* QR slot: empty until the URL is supplied */
 .qr{width:520px;height:520px;border-radius:28px;background:#fff;padding:36px;
   display:flex;align-items:center;justify-content:center;flex-direction:column}
 .qr img{width:100%;height:100%;display:block}
-.qr.empty{border:4px dashed var(--rule);background:transparent}
-.dark .qr.empty{border-color:#2E6352}
-.qr.empty::after{content:"QR";font-size:48px;font-weight:800;letter-spacing:.2em;color:var(--ink-3)}
+.qr.empty{border:4px dashed #2E6352;background:transparent}
+.qr.empty::after{content:"QR";font-size:48px;font-weight:800;letter-spacing:.2em;color:#9FBFB3}
 .qrcap{font-size:34px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-  text-align:center;margin-top:28px}
-.dark .qrcap{color:var(--mint)}
+  text-align:center;margin-top:28px;color:var(--mint)}
+
+/* photo cards: a muted photo blending in from the right */
+.bleed{position:absolute;top:0;right:0;bottom:84px;width:1150px;margin:0;pointer-events:none}
+.bleed img{width:100%;height:100%;object-fit:cover;display:block;opacity:.5;filter:saturate(.85);
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 60%);
+          mask-image:linear-gradient(to right,transparent,#000 60%)}
+.card > .bleed,.card.on > .bleed{transform:none;transition:none}
+.card > :not(.bleed):not(.photo){position:relative;z-index:1}
+.card:has(.bleed) .cols{gap:0 40px;align-items:start}
+.card:has(.bleed) .cols > *{background:rgba(11,59,46,.72);border:2px solid rgba(51,217,160,.35);
+  border-radius:24px;padding:18px 28px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 
 /* talk: text on the left, last year's stage on the right */
 .talk{padding-right:984px}
 .talk h1{font-size:104px}
-.byline{margin-top:auto;font-size:36px;color:var(--ink-2)}
-.byline b{color:var(--ink);font-weight:700}
+.byline{margin-top:auto;font-size:36px;color:#B7D3C9}
+.byline b{color:#fff;font-weight:700}
 .photo{position:absolute;top:0;right:0;bottom:84px;width:864px;margin:0;overflow:hidden}
 .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
 .photo figcaption{position:absolute;left:32px;top:32px;padding:10px 18px;border-radius:8px;
@@ -115,31 +128,27 @@ body.loop .deckonly{display:none}
 .who img{width:200px;height:200px;border-radius:50%;object-fit:cover;border:6px solid #fff;
   box-shadow:0 8px 24px rgba(11,31,26,.14)}
 .who b{display:block;font-size:56px;font-weight:800;letter-spacing:-.01em}
-.who span{display:block;font-size:30px;color:var(--ink-3);margin-top:6px}
+.who span{display:block;font-size:30px;color:#9FBFB3;margin-top:6px}
 .lines{margin-top:40px;font-size:52px;font-weight:600;line-height:1.6}
 .lines .k{display:inline-block;width:220px;font-size:28px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--ink-3)}
+  text-transform:uppercase;color:#9FBFB3}
 
 /* the line every card carries: the talk deck's band, scaled to the stage */
 #foot{position:absolute;left:0;right:0;bottom:0;height:84px;padding:0 48px;
-  display:flex;align-items:center;gap:18px;font-size:21px;font-weight:600;color:var(--ink-2);
-  border-top:2px solid var(--rule);background:var(--ground);transition:background .9s,color .9s,border-color .9s}
+  display:flex;align-items:center;gap:18px;font-size:21px;font-weight:600;color:#B7D3C9;
+  border-top:2px solid #1D5443;background:var(--night)}
 #foot img{display:block;width:auto}
 #foot span{white-space:nowrap}
-.banddisc{font-weight:500;color:var(--ink-3)}
-.bandtag{font-weight:700;color:var(--green-deep)}
+.banddisc{font-weight:500;color:#7FA597}
+.bandtag{font-weight:700;color:var(--mint)}
 .bandlogo{height:40px}
-.bandehl{height:56px}
-.banddot{color:var(--ink-3)}
+.bandehl{height:56px;filter:invert(1)}
+.banddot{color:#7FA597}
 .bandgap{flex:1 1 auto}
-#foot.dark{background:var(--night);color:#B7D3C9;border-color:#1D5443}
-#foot.dark .bandtag{color:var(--mint)}
-#foot.dark .banddisc,#foot.dark .banddot{color:#7FA597}
-#foot.dark .bandehl{filter:invert(1)}
 
 /* the always-there code, as in the talk deck; stands down on cards with their own */
-#badge{position:absolute;right:48px;bottom:112px;display:flex;align-items:center;gap:24px;
-  background:#fff;border:2px solid var(--rule);border-radius:16px;padding:16px 20px;
+#badge{position:absolute;right:48px;bottom:112px;z-index:5;display:flex;align-items:center;gap:24px;
+  background:#fff;color:var(--ink);border:2px solid var(--rule);border-radius:16px;padding:16px 20px;
   box-shadow:0 12px 40px rgba(11,31,26,.10),0 3px 9px rgba(11,31,26,.06);transition:opacity .6s}
 #badge.off{opacity:0}
 .badgeqr{width:160px;height:160px;display:block}
@@ -151,7 +160,7 @@ body.loop .deckonly{display:none}
 #bar{position:absolute;left:0;top:0;height:8px;background:var(--mint);width:0}
 body:not(.loop) #bar{display:none}
 #paused{position:absolute;top:28px;right:40px;font-size:22px;font-weight:700;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--ink-3);display:none}
+  text-transform:uppercase;color:#7FA597;display:none}
 body.loop.paused #paused{display:block}
 
 @media (prefers-reduced-motion:reduce){
@@ -163,14 +172,14 @@ body.loop.paused #paused{display:block}
 <body>
 <div id="stage">
 
-  <section class="card brand">
+  <section class="card brand light">
     <div class="contact">
       <div>
         <img src="doma.svg" alt="Doma Loans">
         <h1>Make lending<br><em>make sense.</em></h1>
         <p class="lede">Home financing for every kind of borrower, every kind of income and every kind of home.</p>
       </div>
-      <div class="deckonly"><div class="qr empty" data-qr="first"></div><div class="qrcap">Save my details</div></div>
+      <div><div class="qr empty" data-qr="first"></div><div class="qrcap">Save my details</div></div>
     </div>
   </section>
 
@@ -185,6 +194,7 @@ body.loop.paused #paused{display:block}
         <li>Primary and second homes</li><li>Long and short term rentals</li><li>Fix and flip</li><li>Construction and bridge</li>
       </ul></div>
     </div>
+    <figure class="bleed"><img src="bg-build.jpg" alt=""></figure>
   </section>
 
   <section class="card">
@@ -206,9 +216,10 @@ body.loop.paused #paused{display:block}
       <span>1099-only</span><span>P&amp;L only</span><span>CPA letter</span><span>Foreign national</span>
     </div>
     <p class="note">Underwritten the way real businesses look.</p>
+    <figure class="bleed"><img src="bg-paperwork.jpg" alt=""></figure>
   </section>
 
-  <section class="card dark" data-giveaway>
+  <section class="card light" data-giveaway>
     <div class="prize">
       <div>
         <div class="eyebrow">Free giveaway</div>
@@ -223,16 +234,20 @@ body.loop.paused #paused{display:block}
     <div class="eyebrow">Who we serve</div>
     <h1>However <em>you earn.</em></h1>
     <div class="chips">
-      <span>W-2 employees</span><span>Self-employed</span><span>1099 and gig workers</span>
+      <span>W-2 employees</span><span>Self-employed</span><span>1099 workers</span>
       <span>Business owners</span><span>Retired</span><span>Investors with no job</span>
     </div>
+    <figure class="bleed"><img src="bg-business.jpg" alt=""></figure>
   </section>
 
   <section class="card">
     <div class="eyebrow">Residency</div>
     <h1>Wherever you <em>call home.</em></h1>
     <div class="chips">
-      <span>U.S. citizens</span><span>Permanent residents</span><span>Visa holders</span><span>Foreign nationals</span>
+      <span>U.S. Citizens</span><span>Permanent residents</span>
+    </div>
+    <div class="chips" style="margin-top:24px">
+      <span>Visa holders</span><span>Foreign nationals</span>
     </div>
     <p class="note">Helping retired parents buy a home here? We can make it happen.</p>
   </section>
@@ -248,6 +263,7 @@ body.loop.paused #paused{display:block}
         <li>HELOCs on rentals</li><li>Fix and flip</li><li>Construction and bridge</li>
       </ul>
     </div>
+    <figure class="bleed"><img src="bg-portfolio.jpg" alt=""></figure>
   </section>
 
   <section class="card">
@@ -256,16 +272,17 @@ body.loop.paused #paused{display:block}
     <div class="chips">
       <span>Single family</span><span>Townhome</span><span>Condo</span><span>Multifamily (2+ units)</span><span>ADU</span>
     </div>
+    <figure class="bleed"><img src="bg-neighborhood.jpg" alt=""></figure>
   </section>
 
   <section class="card">
     <div class="eyebrow">Buying together</div>
     <h1>Families <em>welcome.</em></h1>
     <div class="chips">
-      <span>First-time buyers</span><span>Move-up buyers</span><span>Parents buying for children</span>
-      <span>Children helping parents</span><span>Friends buying together</span><span>Mixed-residency partnerships</span>
+      <span>Parents buying for children</span><span>Children helping parents</span><span>Friends buying together</span><span>Mixed-residency partnerships</span>
     </div>
     <p class="note">Partnering with a friend or parent abroad? We can make it happen.</p>
+    <figure class="bleed"><img src="bg-family.jpg" alt=""></figure>
   </section>
 
   <section class="card talk">
@@ -279,7 +296,7 @@ body.loop.paused #paused{display:block}
     </figure>
   </section>
 
-  <section class="card dark" data-giveaway>
+  <section class="card light" data-giveaway>
     <div class="prize">
       <div>
         <div class="eyebrow">Free giveaway</div>
@@ -342,12 +359,11 @@ body.loop.paused #paused{display:block}
   var CLOSES = new Date(2026, 9, 25, 17, 0).getTime(); // giveaway entries close, local time
   // QR image per slot and mode. Unattended, every code goes to the loop link.
   var QR = {
-    loop: { giveaway: 'qr-p2l.svg', last: 'qr-p2l.svg', badge: 'qr-p2l.svg' },
-    deck: { giveaway: 'qr-p2l.svg', first: 'qr-p2s.svg', last: 'qr-p2e.svg', badge: 'qr-p2s.svg' }
+    loop: { giveaway: 'qr-p2l.svg', first: 'qr-p2l.svg', last: 'qr-p2l.svg', badge: 'qr-p2l.svg' },
+    deck: { giveaway: 'qr-p2l.svg', first: 'qr-p2s.svg', last: 'qr-p2e.svg', badge: 'qr-p2m.svg' }
   };
 
   var stage = document.getElementById('stage');
-  var foot = document.getElementById('foot');
   var bar = document.getElementById('bar');
   var badge = document.getElementById('badge');
   var all = [].slice.call(document.querySelectorAll('.card'));
@@ -402,7 +418,6 @@ body.loop.paused #paused{display:block}
     idx = (i + list.length) % list.length;
     var c = list[idx];
     all.forEach(function(x){ x.classList.toggle('on', x === c); });
-    foot.classList.toggle('dark', c.classList.contains('dark'));
     placeBadge();
     schedule();
   }

@@ -10,8 +10,10 @@ var OUT = 'dist';
 var PAGES = [['p2.html', 'index.html'], ['source.html', 'talk-jk3q.html']];
 
 var ASSETS = [
-  'qr-sm.svg', 'qr-cl.svg', 'qr-il.svg', 'qr-p2l.svg', 'qr-p2s.svg', 'qr-p2e.svg',
+  'qr-sm.svg', 'qr-cl.svg', 'qr-il.svg', 'qr-p2l.svg', 'qr-p2s.svg', 'qr-p2e.svg', 'qr-p2m.svg',
   'doma.svg', 'ehl.svg', 'photo-stage.jpg', 'photo-gaurav.jpg',
+  'bg-build.jpg', 'bg-paperwork.jpg', 'bg-business.jpg', 'bg-portfolio.jpg',
+  'bg-neighborhood.jpg', 'bg-family.jpg',
   'fontfetch/archivo.woff2', 'fontfetch/source-serif-4.woff2'
 ];
 

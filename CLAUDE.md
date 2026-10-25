@@ -13,15 +13,18 @@ canvas, 15 minutes, delivered 2026-10-25 in Newark CA.
   `dist/talk-jk3q.html`. Kept off the site root so visitors don't land on the talk
 - `p2.html` - the second presentation: 13 company and products cards, presented by hand
   or looped with `?loop`. Builds to `dist/index.html`, the page the site root serves
-- `qr-p2s.svg`, `qr-p2e.svg`, `qr-p2l.svg` - p2's codes for `go.domaloans.com/ws26p2s`
-  (first card), `ws26p2e` (last card) and `ws26p2l` (loop)
+- `qr-p2s.svg`, `qr-p2m.svg`, `qr-p2e.svg`, `qr-p2l.svg` - p2's codes for
+  `go.domaloans.com/ws26p2s` (first card), `ws26p2m` (corner badge when presented),
+  `ws26p2e` (last card) and `ws26p2l` (every code in loop mode, and the giveaway)
 - `build-dist.js` - `node build-dist.js` rewrites `p2.html` to `dist/index.html` and
   `source.html` to `dist/talk-jk3q.html`, swapping the Google Fonts link for local
   `@font-face`. Exits non-zero if a remote reference survives or a local one is missing
   from `dist/`
 - `photo-stage.jpg`, `photo-gaurav.jpg` - p2's photos, cropped from `../../Photos`
   (`DSC_7973`, `PZ9_5917`)
-- `dist/` - the deploy bundle and the offline fallback. About 720KB. The only network call is
+- `bg-*.jpg` - p2's six generated backgrounds, cropped from `images/chatgpt-0[1-6].png`.
+  `images/` holds the generated originals, both the ChatGPT and the Gemini sets
+- `dist/` - the deploy bundle and the offline fallback. About 1.8MB. The only network call is
   Google Analytics (`G-3JX3PYCHJR`, the www.domaloans.com stream, shared by every
   domaloans.com hostname), which fails silently offline.
   **Tracked, and not reproducible from a fresh clone** - `build-dist.js` reads its fonts,
